@@ -3,6 +3,8 @@
 #include <string.h>
 #include <inttypes.h>
 
+int MAX_SIZE = 200;
+
 int strip_newline(char* buffer) {
     char *c = strchr(buffer, '\n');
     if (c) {
@@ -10,6 +12,88 @@ int strip_newline(char* buffer) {
         return 1;
     }
     return 0;
+}
+
+void part1_d2(char** spreadsheet, int rows) {
+    char tab[2] = "\t";
+    int sum = 0;
+    for (int i = 0; i < rows; i++) {
+        int min = 9999;
+        int max = -9999;
+        char* str = malloc(sizeof(char) * MAX_SIZE);
+        strcpy(str, spreadsheet[i]);
+
+        char* token;
+
+        token = strtok(str, tab);
+        while(token != NULL) {
+            int val = atoi(token);
+            if (val > max) {
+                max = val;
+            }
+            if (val < min) {
+                min = val;
+            }
+            token = strtok(NULL, tab);
+        }
+        int diff = max - min;
+        sum+= diff;
+        free(str);
+        str = NULL;
+    }
+
+    printf("Sum is %d\n", sum);
+}
+
+void part2_d2(char** spreadsheet, int rows) {
+    char tab[2] = "\t";
+    int sum = 0;
+
+    for (int i = 0; i < rows; i++) {
+        // set 1
+        char* str = malloc(sizeof(char) * MAX_SIZE);
+        strcpy(str, spreadsheet[i]);
+
+        char* token;
+        char* end_str;
+        int cnt = 0;
+
+        token = strtok_r(str, tab, &end_str);
+        while (token != NULL) {
+            int val = atoi(token);
+
+            // loop through the rest, looking for val;
+            char* end_token;
+            int cnt2 = 0;
+
+            // set 2
+            char* str2 = malloc(sizeof(char) * MAX_SIZE);
+            strcpy(str2, spreadsheet[i]);
+
+            char* token2 = strtok_r(str2, tab, &end_token);
+            while (token2 != NULL) {
+                int val2 = atoi(token2);
+                if (cnt != cnt2) {
+                    if ((val % val2) == 0) {
+                        // divisable!
+                        sum+= (val/val2);
+                    }
+                }
+                token2 = strtok_r(NULL, tab, &end_token);
+                cnt2++;
+            }
+
+            free(str2);
+            str2 = NULL;
+
+            token = strtok_r(NULL, tab, &end_str);
+            cnt++;
+        }
+        free(str);
+        str = NULL;
+    }
+
+    printf("Sum is %d\n", sum);
 }
 
 int day2(int argc, char** argv) {
@@ -23,7 +107,6 @@ int day2(int argc, char** argv) {
 
 
     // init heap
-    int MAX_SIZE = 200;
     char** spreadsheet = malloc(sizeof(char*)*rows);
     for (int i = 0; i < rows; i++) {
         spreadsheet[i] = malloc(sizeof(char)*MAX_SIZE);
@@ -45,33 +128,14 @@ int day2(int argc, char** argv) {
     printf("Read spreadsheet contains\n");
     for (int i = 0; i < rows; i++) {
         printf("%s\n", spreadsheet[i]);
-        char* c = spreadsheet[i];
     }
-
-    char tab[2] = "\t";
-    int sum = 0;
-    for (int i = 0; i < rows; i++) {
-        int min = 9999;
-        int max = -9999;
-        char* str = spreadsheet[i];
-        char* token;
-
-        token = strtok(str, tab);
-        while(token != NULL) {
-            int val = atoi(token);
-            if (val > max) {
-                max = val;
-            }
-            if (val < min) {
-                min = val;
-            }
-            token = strtok(NULL, tab);
-        }
-        int diff = max - min;
-        sum+= diff;
-    }
-
-    printf("Sum is %d\n", sum);
+    
+    printf("Part 1\n");
+    part1_d2(spreadsheet, rows);
+    printf("----\n");
+    printf("Part 2\n");
+    part2_d2(spreadsheet, rows);
+    printf("----\n");
 
     // free heap
     for (int i = 0; i < rows; i++) {
