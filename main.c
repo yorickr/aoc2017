@@ -2,5 +2,6 @@
 #include "day2/day2.h"
 
 int main(int argc, char** argv) {
-    return day1(argc, argv);
+    // return day1(argc, argv);
+    return day2(argc, argv);
 }
