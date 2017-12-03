@@ -29,13 +29,7 @@ void part2(char* input) {
     uint64_t sum = 0;
     for (size_t i = 0; i < len; i++) {
         char cur = input[i];
-        char next;
-
-        if ((i + half) >= len) {
-            next = input[(i + half) - len];
-        } else {
-            next = input[i+half];
-        }
+        char next = input[(i+half) % len];
 
         if (cur == next) {
             sum += cur - '0';
