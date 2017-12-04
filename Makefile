@@ -9,8 +9,6 @@ OBJ_DIR=./
 
 INCLUDES=-I ./include
 
-LIBRARY=libgenetic-algo.a
-
 SRC=$(shell find . -name "*.c")
 
 OBJ=$(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRC))
@@ -32,12 +30,6 @@ debug: $(EXECUTABLE)
 $(EXECUTABLE): $(OBJ)
 	$(CC) -o $@ $(CPPFLAGS) $(OBJ) $(INCLUDES)
 
-# Generate the static library
-# TODO: Get this working.
-$(LIBRARY): $(OBJ)
-	$(AR) rcs $@ $(OBJ)
-
 clean:
 	rm -rf $(OBJ)
 	rm -f $(EXECUTABLE)
-	rm -f $(LIBRARY)
